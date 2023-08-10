@@ -8,6 +8,7 @@ import SplashScreen from '../screens/Splash'
 import HomeScreen from '../screens/Home'
 import ProfileScreen from '../screens/Profile'
 import LoginScreen from '../screens/Login'
+import ChatScreen from '../screens/chat'
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 const Navigation = () => {
@@ -37,6 +38,14 @@ const Navigation = () => {
             options={{
               tabBarIcon: ({ focused }) => <Entypo name='home' color={focused ? '#0066FF' : '#fff'} size={25} />,
               tabBarLabel: 'Home'
+            }}
+          />
+          <Tab.Screen
+            name='Chat'
+            component={ChatScreen}
+            options={{
+              tabBarIcon: ({ focused }) => <Entypo name='bells' color={focused ? '#0066FF' : '#fff'} size={25} />,
+              tabBarLabel: 'Chat'
             }}
           />
           <Tab.Screen
