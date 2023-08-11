@@ -6,6 +6,15 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsImpl": "maplibre",
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoicXVvY2h1eTEyIiwiYSI6ImNsbDYyd3E3MjBvZmszZW1rNHJkdnkyNTQifQ.rC--af5U4XzpqryRaboutQ"
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -15,9 +24,11 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.yourpackagename",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.yourpackagename",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -26,5 +37,20 @@
     "web": {
       "favicon": "./assets/favicon.png"
     }
+  },
+  "dependencies": {
+    "react-native-maps": "^0.28.0"
+  },
+  "hooks": {
+    "postPublish": [
+      {
+        "file": "sentry-expo/upload-sourcemaps",
+        "config": {
+          "organization": "your-organization",
+          "project": "your-project",
+          "authToken": "your-auth-token"
+        }
+      }
+    ]
   }
 }

@@ -44,7 +44,7 @@ const Navigation = () => {
             name='Chat'
             component={ChatScreen}
             options={{
-              tabBarIcon: ({ focused }) => <Entypo name='bells' color={focused ? '#0066FF' : '#fff'} size={25} />,
+              tabBarIcon: ({ focused }) => <Entypo name='bell' color={focused ? '#0066FF' : '#fff'} size={25} />,
               tabBarLabel: 'Chat'
             }}
           />
