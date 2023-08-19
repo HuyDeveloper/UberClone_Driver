@@ -13,7 +13,8 @@
           "RNMapboxMapsImpl": "maplibre",
           "RNMapboxMapsDownloadToken": "sk.eyJ1IjoicXVvY2h1eTEyIiwiYSI6ImNsbDYyd3E3MjBvZmszZW1rNHJkdnkyNTQifQ.rC--af5U4XzpqryRaboutQ"
         }
-      ]
+      ],
+      "react-native-background-fetch"
     ],
     "splash": {
       "image": "./assets/splash.png",
@@ -24,8 +25,16 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.yourpackagename",
-      "supportsTablet": true
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "fetch",
+          "processing"
+        ],
+        "BGTaskSchedulerPermittedIdentifiers": [
+          "com.transistorsoft.fetch",
+          "com.transistorsoft.customtask"
+        ]
+      }
     },
     "android": {
       "package": "com.yourpackagename",
