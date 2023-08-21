@@ -61,6 +61,7 @@ import React, { useEffect, useState } from 'react'
 import { Text, View,StyleSheet, TextInput } from 'react-native'
 import io from 'socket.io-client'
 import { BASE_URL } from '../../config'
+import socket from '../context/socket'
 import Button from '../components/Button'
 import NotificationIcon from '../components/Notification'
 import GPSExample from './gps'
@@ -68,32 +69,40 @@ import GPSExample from './gps'
 function Chat() {
   const [value, setValue] = useState('')
   const [show, setShow] = useState(false)
-  const setData = (e) =>{
-    e.preventDefault()
-    console.log(value)
-    setValue('')
+  // const setData = (e) =>{
+  //   e.preventDefault()
+  //   console.log(value)
+  //   setValue('')
     // setShow(!show)
-  }
-  setInterval(()=>{
-    setShow(!show)
-  },3000)
-  useEffect(() => {
-    const socket = io(BASE_URL)
-    socket.on('connect', () => {
-      console.log(socket.id)
-      socket.emit('hello', 'world')
-    })
-    socket.on('disconnect', () => {
-      console.log(socket.id) // undefined
-    })
-    socket.on('bookingdriver', (data) => {
-      console.log(data)
-    })
-    return () => {
-      socket.disconnect()
-    }
-  },[show])
+  //}
+  // setInterval(()=>{
+  //   setShow(!show)
+  // },3000)
+
+  // useEffect(() => {
+  //   socket.connect();
+  //   console.log(socket.id)
+  //   console.log(1)
+  //   function receiveData(msg){
+  //     console.log(msg)
+  //     console.log(2)
+  //     setValue(msg)
+  //   }
+  //   // socket.on('connect', () => {
+  //   //   console.log(socket.id)
+  //   //   socket.emit('hello', 'world')
+  //   // })
+  //   // socket.on('disconnect', () => {
+  //   //   console.log(socket.id) // undefined
+  //   // })
+  //   socket.on('bookingdriver', receiveData)
+  //   return ()=>{
+  //     //socket.off('bookingdriver')
+  //     socket.disconnect()
+  //   }
+  // },[])
   const notificationCount = 2
+
   return (
     <View style={styles.body}>
       <Text>chat</Text>
@@ -105,7 +114,7 @@ function Chat() {
           setValue(value)
         }}
       />
-      <Button title='Send' color='#33CCFF' onPressFunction={setData} />
+      <Button title='Send' color='#33CCFF' onPressFunction={()=>{}} />
       <NotificationIcon notificationCount={notificationCount} />
       <GPSExample/>
     </View>
