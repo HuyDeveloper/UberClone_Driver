@@ -9,11 +9,12 @@ import HomeScreen from '../screens/Home'
 import ProfileScreen from '../screens/Profile'
 import LoginScreen from '../screens/Login'
 import ChatScreen from '../screens/chat'
+import NotificationIcon from './Notification'
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 const Navigation = () => {
   const { userInfo, splashLoading } = useContext(AuthContext)
-
+  const notificationCount = 2
   return (
     <NavigationContainer>
       {splashLoading ? (
@@ -44,7 +45,7 @@ const Navigation = () => {
             name='Chat'
             component={ChatScreen}
             options={{
-              tabBarIcon: ({ focused }) => <Entypo name='bell' color={focused ? '#0066FF' : '#fff'} size={25} />,
+              tabBarIcon: ({ focused }) => <NotificationIcon notificationCount={notificationCount} focused={focused} />,
               tabBarLabel: 'Chat'
             }}
           />

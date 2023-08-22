@@ -7,6 +7,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({});
+  const [profile, setProfile] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
 
@@ -27,7 +28,9 @@ export const AuthProvider = ({ children }) => {
         setUserInfo(data.result);
         AsyncStorage.setItem("userInfo", JSON.stringify(data.result));
         setIsLoading(false);
-        console.log(data.result);
+        setProfile(data.user);
+        AsyncStorage.setItem("profile", JSON.stringify(data.user));
+        console.log(data.user.name);
       })
       .catch((error) => {
         console.error(error);
@@ -50,7 +53,9 @@ export const AuthProvider = ({ children }) => {
       .then((res) => {
         console.log(res.data);
         AsyncStorage.removeItem("userInfo");
+        AsyncStorage.removeItem("profile");
         setUserInfo({});
+        setProfile({});
         setIsLoading(false);
       })
       .catch((error) => {
@@ -63,10 +68,13 @@ export const AuthProvider = ({ children }) => {
     try {
       setSplashLoading(true);
       let userInfor = await AsyncStorage.getItem("userInfo");
+      let profileuser = await AsyncStorage.getItem("profile");
       userInfor = JSON.parse(userInfor);
+      profileuser = JSON.parse(profileuser);
 
       if (userInfor) {
         setUserInfo(userInfor);
+        setProfile(profileuser);
       }
 
       setSplashLoading(false);
@@ -75,76 +83,6 @@ export const AuthProvider = ({ children }) => {
       console.log(error);
     }
   };
-  // const receiveMsg = async () => {
-  //   let connection = new Connection();
-  //   console.log(amqp_url_cloud)
-  //   const config = {
-  //     uri: amqp_url_cloud,
-  //     username: "ieeknyut",
-  //     password: "O7eQ0XfkIHu9aAHQcwd3dRW0t7H4-9Ke",
-  //   };
-  //   connection
-  //     .connect(config)
-  //     .then(() => {
-  //       console.log("Đã kết nối thành công đến RabbitMQ");
-
-  //       // Tạo trao đổi
-  //       const exchange = new Exchange(connection, {
-  //         name: "booking",
-  //         type: "fanout",
-  //       });
-  //       exchange
-  //         .declare()
-  //         .then(() => {
-  //           console.log("Đã khai báo trao đổi");
-
-  //           // Tạo hàng đợi
-  //           const queue = new Queue(connection, {
-  //             exchange: "booking",
-  //           });
-  //           queue
-  //             .declare()
-  //             .then(() => {
-  //               console.log("Đã khai báo hàng đợi");
-
-  //               // Đăng ký lắng nghe tin nhắn
-  //               queue
-  //                 .bind()
-  //                 .then(() => {
-  //                   console.log("Đã ràng buộc hàng đợi");
-
-  //                   queue.startConsuming((message) => {
-  //                     console.log("Nhận tin nhắn:", message);
-  //                   });
-  //                 })
-  //                 .catch((error) => {
-  //                   console.log("Lỗi khi ràng buộc hàng đợi:", error);
-  //                 });
-  //             })
-  //             .catch((error) => {
-  //               console.log("Lỗi khi khai báo hàng đợi:", error);
-  //             });
-  //         })
-  //         .catch((error) => {
-  //           console.log("Lỗi khi khai báo trao đổi:", error);
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       console.log("Lỗi khi kết nối đến RabbitMQ:", error);
-  //     });
-  // };
-
-  // const socket = io(BASE_URL)
-  // socket.on('connect', () => {
-  //   console.log(socket.id)
-  //   socket.emit('hello', 'world')
-  // })
-  // socket.on('disconnect', () => {
-  //   console.log(socket.id) // undefined
-  // })
-  // socket.on('bookingdriver', (data) => {
-  //   console.log(data)
-  // })
 
   useEffect(() => {
     isLoggedIn();
@@ -156,6 +94,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         isLoading: isLoading,
         userInfo: userInfo,
+        profile: profile,
         splashLoading,
         login: login,
         isLoggedIn,

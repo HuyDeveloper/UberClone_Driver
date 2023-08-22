@@ -38,7 +38,6 @@ const Home = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    marginTop: 30,
     backgroundColor: "#000",
   },
   text: {
@@ -62,6 +61,7 @@ const styles = StyleSheet.create({
     fontSize: 45,
     fontWeight: "bold",
     marginRight: 8,
+    marginTop: 30,
     color: "#fff",
   },
   container: {

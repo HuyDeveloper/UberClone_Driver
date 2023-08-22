@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
-const NotificationIcon = ({ notificationCount }) => {
+const NotificationIcon = ({ notificationCount, focused }) => {
   return (
     <View>
-      <AntDesign name="bells" size={30} color="black" />
+     <Entypo name='bell' color={focused ? '#0066FF' : '#fff'} size={25} />
       {notificationCount > 0 && (
         <View
           style={{
