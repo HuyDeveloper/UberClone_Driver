@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
 import { BASE_URL } from "../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import io from "socket.io-client";
+import {io} from 'socket.io-client';
+const socket = io(BASE_URL)
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,7 +10,8 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
-
+  const [isBusy, setIsBusy] = useState(true);
+  const [dataTrip, setDataTrip] = useState({});
   const login = (phone, password) => {
     setIsLoading(true);
     fetch(`${BASE_URL}/users/login-driver`, {
@@ -64,6 +65,10 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
+  const setPedding = () => {
+    setIsBusy(false);
+  }
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -86,6 +91,19 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     isLoggedIn();
+    socket.on("connect", () => {
+      console.log(socket.id);
+    });
+    console.log(1);
+    socket.on("bookingdriver", (msg) => {
+      console.log(msg);
+      setDataTrip(msg);
+      setIsBusy(true);
+    });
+
+    socket.on("disconnect", () => {
+      console.log(socket.id); // undefined
+    });
     //receiveMsg();
   }, []);
 
@@ -99,6 +117,9 @@ export const AuthProvider = ({ children }) => {
         login: login,
         isLoggedIn,
         logout,
+        isBusy,
+        dataTrip,
+        setPedding
       }}
     >
       {children}

@@ -57,72 +57,113 @@
 
 // export default MapComponent;
 
+import React, { useEffect, useState, useRef, useContext } from "react";
+import { Text, View, StyleSheet, TextInput, Image } from "react-native";
+import { BASE_URL } from "../../config";
+import Button from "../components/Button";
+import GPSExample from "./gps";
+import { AuthContext } from "../context/AuthContext";
 
-
-import React, { useEffect, useState } from 'react'
-import { Text, View,StyleSheet, TextInput } from 'react-native'
-import io from 'socket.io-client'
-import { BASE_URL } from '../../config'
-import socket from '../context/socket'
-import Button from '../components/Button'
-import NotificationIcon from '../components/Notification'
-import GPSExample from './gps'
 
 function Chat() {
-  const [value, setValue] = useState('')
-  const [show, setShow] = useState(false)
-  const notificationCount = 2
-
+  const [value, setValue] = useState("");
+  const { dataTrip, isBusy, setPedding } = useContext(AuthContext);
+  const acceptBooking = () => {
+    fetch(`${BASE_URL}/booking/accept-booking`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error(error);
+      });
+  };
+  const lottieRef = useRef(true);
   return (
     <View style={styles.body}>
-      <Text>chat</Text>
-      <TextInput
-       style={styles.input}
-       value={value}
-        placeholder='Enter your message'
-        onChangeText={(value) => {
-          setValue(value)
-        }}
-      />
-      <View style={styles.btn}>
-        <Button style={{marginBottom: 10,}} title='Dismiss' color='#fff' onPressFunction={()=>{}} />
-        <Button style={{marginBottom: 10,}} title='Accept booking' color='#33CCFF' onPressFunction={()=>{}} />
-      </View>
-      {/* <NotificationIcon notificationCount={notificationCount} /> */}
-      <GPSExample/>
+      {isBusy ? (
+        <View style={{paddingBottom:250}}>
+          <Image
+            style={styles.animation}
+            source={require("../../assets/waiting.gif")}
+          />
+          <Text style={{ color: "#fff", fontSize: 30 }}>
+            Waiting your customer...
+          </Text>
+          <Button  style={{ marginBottom: 10 }}
+              title="Dismiss"
+              color="#fff"  onPressFunction={() => {}}/>
+        </View>
+      ) : (
+        <View>
+          <TextInput
+            style={styles.input}
+            value={value}
+            placeholder="Enter your message"
+            onChangeText={(value) => {
+              setValue(value);
+            }}
+          />
+          <View style={styles.btn}>
+            <Button
+              style={{ marginBottom: 10 }}
+              title="Dismiss"
+              color="#fff"
+              onPressFunction={() => {}}
+            />
+            <Button
+              style={{ marginBottom: 10 }}
+              title="Accept booking"
+              color="#33CCFF"
+              onPressFunction={acceptBooking}
+            />
+          </View>
+          {/* <NotificationIcon notificationCount={notificationCount} /> */}
+          <GPSExample />
+        </View>
+      )}
     </View>
-  )
+  );
 }
 
-export default Chat
+export default Chat;
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#000',
-    justifyContent:'flex-end'
+    alignItems: "center",
+    backgroundColor: "#000",
+    justifyContent: "flex-end",
   },
-  btn:{
-    display:'flex',
-    flexDirection:'column',
-    padding:10,
+  animation: {
+    width: 300,
+    height: 300,
+  },
+  btn: {
+    display: "flex",
+    flexDirection: "column",
+    padding: 10,
   },
   input: {
     marginTop: 50,
     borderRadius: 20,
     marginBottom: 10,
-    borderColor: '#555',
+    borderColor: "#555",
     fontSize: 20,
-    backgroundColor: '#fff',
-    textAlign: 'auto',
+    backgroundColor: "#fff",
+    textAlign: "auto",
     width: 330,
     borderWidth: 1,
     height: 60,
-    padding: 20
-  }
-})
-
+    padding: 20,
+  },
+});
 
 // const decodePolyline = (polyline) => {
 //   let index = 0,

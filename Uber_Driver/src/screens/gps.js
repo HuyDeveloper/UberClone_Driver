@@ -28,7 +28,7 @@ const LocationExample = () => {
   return (
     <View>
       {location ? (
-        <Text>
+        <Text style={{color: '#fff'}}>
           Latitude: {location.coords.latitude}, Longitude: {location.coords.longitude}
         </Text>
       ) : (
