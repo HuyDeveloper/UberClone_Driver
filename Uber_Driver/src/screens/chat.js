@@ -1,88 +1,18 @@
-// import React, { useEffect } from 'react';
-// import { View } from 'react-native';
-// import WebView from 'react-native-webview';
-// import mapboxAccessToken from '../../config'
-
-// const MapComponent = () => {
-//   const htmlContent = `
-//   <html>
-//   <head>
-//   <meta charset="utf-8">
-//   <title>Display navigation directions</title>
-//   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-//   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
-//   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-//   <style>
-//   body { margin: 0; padding: 0; }
-//   #map { position: absolute; top: 30; bottom: 0; width: 100%; }
-//   </style>
-//   </head>
-//   <body>
-//   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
-//   <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" type="text/css">
-//   <div id="map"></div>
-
-//   <script>
-//     mapboxgl.accessToken = 'pk.eyJ1IjoicXVvY2h1eTEyIiwiYSI6ImNsazQ3djl6ZjBoYzIzZHFwaDBzZm5sN3EifQ.u41jZR8OyIQK3GK3rgy_Vg';
-//   const map = new mapboxgl.Map({
-//   container: 'map',
-//   style: 'mapbox://styles/mapbox/streets-v12',
-//   center: [-79.4512, 43.6568],
-//   zoom: 13
-//   });
-
-//   map.addControl(
-//   new MapboxDirections({
-//   accessToken: mapboxgl.accessToken
-//   }),
-//   'top-left'
-//   );
-//   </script>
-
-//   </body>
-//   </html>
-//   `;
-
-//   return (
-//     <View style={{ flex: 1 }}>
-//       <WebView
-//         source={{ html: htmlContent }}
-//         originWhitelist={['*']}
-//         javaScriptEnabled={true}
-//         domStorageEnabled={true}
-//       />
-//     </View>
-//   );
-// };
-
-// export default MapComponent;
-
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { Text, View, StyleSheet, TextInput, Image } from "react-native";
 import { BASE_URL } from "../../config";
 import Button from "../components/Button";
 import GPSExample from "./gps";
 import { AuthContext } from "../context/AuthContext";
-
+import { useNavigation } from "@react-navigation/native";
 
 function Chat() {
+  const {SetOrigin, SetDestination} = useContext(AuthContext);
   const [value, setValue] = useState("");
   const { dataTrip, isBusy, setPedding } = useContext(AuthContext);
+  const navigation = useNavigation();
   const acceptBooking = () => {
-    fetch(`${BASE_URL}/booking/accept-booking`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        // Xử lý lỗi nếu có
-        console.error(error);
-      });
+      navigation.navigate("mapScreen");
   };
   const lottieRef = useRef(true);
   return (
@@ -102,6 +32,10 @@ function Chat() {
         </View>
       ) : (
         <View>
+        <Image
+            style={{width:400, height:300}}
+            source={require("../../assets/found.gif")}
+          />
           <TextInput
             style={styles.input}
             value={value}
@@ -115,7 +49,7 @@ function Chat() {
               style={{ marginBottom: 10 }}
               title="Dismiss"
               color="#fff"
-              onPressFunction={() => {}}
+              onPressFunction={() => {setPedding()}}
             />
             <Button
               style={{ marginBottom: 10 }}
@@ -124,7 +58,6 @@ function Chat() {
               onPressFunction={acceptBooking}
             />
           </View>
-          {/* <NotificationIcon notificationCount={notificationCount} /> */}
           <GPSExample />
         </View>
       )}
@@ -149,9 +82,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     padding: 10,
+    marginLeft: 20,
   },
   input: {
     marginTop: 50,
+    marginLeft: 30,
     borderRadius: 20,
     marginBottom: 10,
     borderColor: "#555",

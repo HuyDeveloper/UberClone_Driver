@@ -32,7 +32,7 @@ const LocationExample = () => {
           Latitude: {location.coords.latitude}, Longitude: {location.coords.longitude}
         </Text>
       ) : (
-        <Text>Loading location...</Text>
+        <Text  style={{color: '#fff'}}>Loading location...</Text>
       )}
       {error && <Text>Error: {error}</Text>}
     </View>

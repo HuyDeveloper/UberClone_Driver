@@ -12,6 +12,15 @@ export const AuthProvider = ({ children }) => {
   const [splashLoading, setSplashLoading] = useState(false);
   const [isBusy, setIsBusy] = useState(true);
   const [dataTrip, setDataTrip] = useState({});
+  const [origin, setOrigin] = useState();
+  const [destination, setDestination] = useState();
+  const SetOrigin = (origin) => {
+    setOrigin(origin);
+  }
+  const SetDestination = (destination) => {
+    setDestination(destination);
+  }
+
   const login = (phone, password) => {
     setIsLoading(true);
     fetch(`${BASE_URL}/users/login-driver`, {
@@ -98,7 +107,7 @@ export const AuthProvider = ({ children }) => {
     socket.on("bookingdriver", (msg) => {
       console.log(msg);
       setDataTrip(msg);
-      setIsBusy(true);
+      setIsBusy(false);
     });
 
     socket.on("disconnect", () => {
@@ -118,8 +127,13 @@ export const AuthProvider = ({ children }) => {
         isLoggedIn,
         logout,
         isBusy,
+        setIsBusy,
         dataTrip,
-        setPedding
+        setPedding,
+        origin,
+        destination,
+        SetOrigin,
+        SetDestination,
       }}
     >
       {children}

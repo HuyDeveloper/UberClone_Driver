@@ -5,8 +5,8 @@ import Navigation from "./src/components/Navigation";
 export default function App() {
 
   return (
-    <AuthProvider>
+      <AuthProvider>
       <Navigation />
-    </AuthProvider>
+    </AuthProvider> 
   );
 }

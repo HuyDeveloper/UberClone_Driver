@@ -8,7 +8,7 @@ import SplashScreen from '../screens/Splash'
 import HomeScreen from '../screens/Home'
 import ProfileScreen from '../screens/Profile'
 import LoginScreen from '../screens/Login'
-import ChatScreen from '../screens/chat'
+import ChatScreen from '../routes/ChatStack'
 import NotificationIcon from './Notification'
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
