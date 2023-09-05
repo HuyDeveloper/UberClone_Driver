@@ -7,18 +7,19 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
 function Chat() {
-  const {SetOrigin, SetDestination} = useContext(AuthContext);
+  const { SetOrigin, SetDestination, sendInfoDriver } = useContext(AuthContext);
   const [value, setValue] = useState("");
   const { dataTrip, isBusy, setPedding } = useContext(AuthContext);
   const navigation = useNavigation();
   const acceptBooking = () => {
-      navigation.navigate("mapScreen");
+    sendInfoDriver();
+    navigation.navigate("mapScreen");
   };
   const lottieRef = useRef(true);
   return (
     <View style={styles.body}>
       {isBusy ? (
-        <View style={{paddingBottom:250}}>
+        <View style={{ paddingBottom: 250 }}>
           <Image
             style={styles.animation}
             source={require("../../assets/waiting.gif")}
@@ -26,14 +27,17 @@ function Chat() {
           <Text style={{ color: "#fff", fontSize: 30 }}>
             Waiting your customer...
           </Text>
-          <Button  style={{ marginBottom: 10 }}
-              title="Dismiss"
-              color="#fff"  onPressFunction={() => {}}/>
+          <Button
+            style={{ marginBottom: 10 }}
+            title="Dismiss"
+            color="#fff"
+            onPressFunction={() => {}}
+          />
         </View>
       ) : (
         <View>
-        <Image
-            style={{width:400, height:300}}
+          <Image
+            style={{ width: 400, height: 300 }}
             source={require("../../assets/found.gif")}
           />
           <TextInput
@@ -49,7 +53,9 @@ function Chat() {
               style={{ marginBottom: 10 }}
               title="Dismiss"
               color="#fff"
-              onPressFunction={() => {setPedding()}}
+              onPressFunction={() => {
+                setPedding();
+              }}
             />
             <Button
               style={{ marginBottom: 10 }}

@@ -98,6 +98,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const sendInfoDriver = () => {
+    socket.emit("driverInfo", profile);
+  }
+
   useEffect(() => {
     isLoggedIn();
     socket.on("connect", () => {
@@ -134,6 +138,7 @@ export const AuthProvider = ({ children }) => {
         destination,
         SetOrigin,
         SetDestination,
+        sendInfoDriver,
       }}
     >
       {children}
