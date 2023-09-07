@@ -12,10 +12,10 @@ function Chat() {
   const { dataTrip, isBusy, setPedding } = useContext(AuthContext);
   const navigation = useNavigation();
   const acceptBooking = () => {
-    sendInfoDriver();
+    sendInfoDriver(dataTrip);
     navigation.navigate("mapScreen");
   };
-  const lottieRef = useRef(true);
+  
   return (
     <View style={styles.body}>
       {isBusy ? (
@@ -27,12 +27,6 @@ function Chat() {
           <Text style={{ color: "#fff", fontSize: 30 }}>
             Waiting your customer...
           </Text>
-          <Button
-            style={{ marginBottom: 10 }}
-            title="Dismiss"
-            color="#fff"
-            onPressFunction={() => {}}
-          />
         </View>
       ) : (
         <View>

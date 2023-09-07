@@ -43,9 +43,10 @@ import getCoordinates from "../components/getCoordinates";
 import { API_MAP } from "../../config";
 import { AuthContext } from "../context/AuthContext";
 import { BASE_URL } from "../../config";
+import TripInfo from "../components/tripInfo";
 import axios from "axios";
+
 const DirectionsMap = () => {
-  // const {origin, destination} = useContext(AuthContext)
   // console.log(`Hi ${origin}, ${destination}`)
   const [coordinates, setCoordinates] = useState([]);
   const [start, setStart] = useState(null);
@@ -58,27 +59,24 @@ const DirectionsMap = () => {
   });
   const [error, setError] = useState(null);
 
-  // getCoordinates(origin, (result) => {
-  //   setStart(result);
-  // })
-
-  // getCoordinates(destination, (result) => {
-  //   setEnd(result);
-  // })
-  const getBooking = async () => {};
+  const { setDataTripInfo, profile } = useContext(AuthContext);
   const fetchDirections = async () => {
     try {
       let a, b;
-      await fetch(`${BASE_URL}/booking/accept-booking`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      await fetch(
+        `${BASE_URL}/booking/accept-booking/${profile.typeVerhicle}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
-          console.log(`data ${data}`);
           data = JSON.parse(data);
+          setDataTripInfo(data);
+          console.log(11);
           a = data.pickupLocation;
           b = data.destination;
           setStart(data.pickupLocation);
@@ -88,12 +86,12 @@ const DirectionsMap = () => {
           // Xử lý lỗi nếu có
           console.error(error);
         });
-     
+
       const geocoding1 = await axios.get(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${a}.json?access_token=${API_MAP}`
       );
       const start = geocoding1.data.features[0].center;
-      console.log(start[0], start[1])
+      console.log(start[0], start[1]);
       const geocoding2 = await axios.get(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${b}.json?access_token=${API_MAP}`
       );
@@ -101,12 +99,12 @@ const DirectionsMap = () => {
       const res = await fetch(
         `https://api.mapbox.com/directions/v5/mapbox/driving/ ${start[0]},${start[1]};${end[0]},${end[1]}?access_token=${API_MAP}`
       );
-      const Data = await res.json()
-      const route = Data.routes[0]
-      const routeCoordinates = route.geometry
+      const Data = await res.json();
+      const route = Data.routes[0];
+      const routeCoordinates = route.geometry;
       // console.log(routeCoordinates);
-      const decodedCoordinates = decodePolyline(routeCoordinates)
-      setCoordinates(decodedCoordinates)
+      const decodedCoordinates = decodePolyline(routeCoordinates);
+      setCoordinates(decodedCoordinates);
     } catch (error) {
       setError("Error retrieving directions.");
       console.error(`This ${error}`);
@@ -115,6 +113,7 @@ const DirectionsMap = () => {
 
   useEffect(() => {
     fetchDirections();
+    console.log(2);
   }, []);
 
   if (error) {
@@ -135,6 +134,8 @@ const DirectionsMap = () => {
           strokeWidth={6}
         />
       </MapView>
+      {/* {tripInfo ? (<Text>{tripInfo.name}</Text>):(<Text>Loading...</Text>)} */}
+      <TripInfo />
     </View>
   );
 };

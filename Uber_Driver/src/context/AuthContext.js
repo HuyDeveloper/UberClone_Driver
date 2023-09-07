@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
 import { BASE_URL } from "../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {io} from 'socket.io-client';
-const socket = io(BASE_URL)
+import { io } from "socket.io-client";
+const socket = io(BASE_URL);
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -14,12 +14,17 @@ export const AuthProvider = ({ children }) => {
   const [dataTrip, setDataTrip] = useState({});
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
+  const [tripInfo, setTripInfo] = useState({});
+
+  const setDataTripInfo = (data) => {
+    setTripInfo(data);
+  };
   const SetOrigin = (origin) => {
     setOrigin(origin);
-  }
+  };
   const SetDestination = (destination) => {
     setDestination(destination);
-  }
+  };
 
   const login = (phone, password) => {
     setIsLoading(true);
@@ -40,7 +45,19 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
         setProfile(data.user);
         AsyncStorage.setItem("profile", JSON.stringify(data.user));
-        console.log(data.user.name);
+        console.log('login')
+        socket.on("connect", () => {
+          console.log(socket.id);
+        });
+        socket.on(`${data.user.typeVerhicle}`, (msg) => {
+          console.log(msg);
+          setDataTrip(msg);
+          setIsBusy(false);
+        });
+
+        socket.on("disconnect", () => {
+          console.log(socket.id); // undefined
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -75,8 +92,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const setPedding = () => {
-    setIsBusy(false);
-  }
+    setIsBusy(true);
+    console.log(isBusy);
+  };
 
   const isLoggedIn = async () => {
     try {
@@ -89,6 +107,18 @@ export const AuthProvider = ({ children }) => {
       if (userInfor) {
         setUserInfo(userInfor);
         setProfile(profileuser);
+        socket.on("connect", () => {
+          console.log(socket.id);
+        });
+        socket.on(`${profileuser.typeVerhicle}`, (msg) => {
+          console.log(msg);
+          setDataTrip(msg);
+          setIsBusy(false);
+        });
+
+        socket.on("disconnect", () => {
+          console.log(socket.id); // undefined
+        });
       }
 
       setSplashLoading(false);
@@ -98,25 +128,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const sendInfoDriver = () => {
+  const sendInfoDriver = (dataTrip) => {
+    profile.cusPhone = dataTrip.phone;
+    console.log(profile)
     socket.emit("driverInfo", profile);
-  }
+  };
 
   useEffect(() => {
     isLoggedIn();
-    socket.on("connect", () => {
-      console.log(socket.id);
-    });
-    console.log(1);
-    socket.on("bookingdriver", (msg) => {
-      console.log(msg);
-      setDataTrip(msg);
-      setIsBusy(false);
-    });
 
-    socket.on("disconnect", () => {
-      console.log(socket.id); // undefined
-    });
     //receiveMsg();
   }, []);
 
@@ -139,6 +159,8 @@ export const AuthProvider = ({ children }) => {
         SetOrigin,
         SetDestination,
         sendInfoDriver,
+        setDataTripInfo,
+        tripInfo,
       }}
     >
       {children}
