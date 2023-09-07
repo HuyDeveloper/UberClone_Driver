@@ -12,7 +12,11 @@ function Login({ navigation }) {
     if (phone.length == 0 || password.length == 0) {
       Alert.alert('Error!', 'Your information is not invalid')
     } else {
-      login(phone, password)
+      const a = login(phone, password)
+      console.log(a)
+      if(a == false){
+        navigation.navigate('Login')
+      }
     }
   }
   return (

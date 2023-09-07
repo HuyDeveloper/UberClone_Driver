@@ -38,7 +38,7 @@ function Login({ navigation }) {
           ______________________________________________________________
         </Text>
         <Text style={styles.text}>Phone number: {profile.phone}</Text>
-        <Text style={styles.text}>Phuong tien: Xe may</Text>
+        <Text style={styles.text}>Phuong tien: {profile.typeVerhicle}</Text>
         <Text style={styles.textmain}>Settings:</Text>
         <Text style={{ color: "#fff", paddingBottom:20 }} numberOfLines={1}>
           ______________________________________________________________

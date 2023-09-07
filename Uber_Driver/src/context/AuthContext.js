@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
         setProfile(data.user);
         AsyncStorage.setItem("profile", JSON.stringify(data.user));
-        console.log('login')
         socket.on("connect", () => {
           console.log(socket.id);
         });
@@ -110,6 +109,7 @@ export const AuthProvider = ({ children }) => {
         socket.on("connect", () => {
           console.log(socket.id);
         });
+        console.log(` EH ${profileuser.typeVerhicle}`)
         socket.on(`${profileuser.typeVerhicle}`, (msg) => {
           console.log(msg);
           setDataTrip(msg);
