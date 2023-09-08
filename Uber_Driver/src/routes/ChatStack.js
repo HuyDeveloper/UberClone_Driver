@@ -11,7 +11,7 @@ function ChatScreen() {
   return (
     <HomeStack.Navigator screenOptions={{}}>
       <HomeStack.Screen name='chat' component={Chat} options={{ headerShown: false }} />
-      <HomeStack.Screen name='mapScreen' component={Map} />
+      <HomeStack.Screen name='mapScreen' component={Map} options={{ headerShown: false }} />
     </HomeStack.Navigator>
   )
 }

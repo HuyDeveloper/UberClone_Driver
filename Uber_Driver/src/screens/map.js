@@ -51,6 +51,8 @@ const DirectionsMap = () => {
   const [coordinates, setCoordinates] = useState([]);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
+  const [latitude, setLatitude] = useState(null); 
+  const [longtitude, setLongtitude] = useState(null);
   const [region, setRegion] = useState({
     latitude: 14.0583,
     longitude: 108.2772,
@@ -58,7 +60,6 @@ const DirectionsMap = () => {
     longitudeDelta: 10,
   });
   const [error, setError] = useState(null);
-
   const { setDataTripInfo, profile } = useContext(AuthContext);
   const fetchDirections = async () => {
     try {
@@ -104,6 +105,9 @@ const DirectionsMap = () => {
       const routeCoordinates = route.geometry;
       // console.log(routeCoordinates);
       const decodedCoordinates = decodePolyline(routeCoordinates);
+      setLatitude(decodedCoordinates[0].latitude)
+      setLongtitude(decodedCoordinates[0].longitude)
+      console.log(decodedCoordinates[0].latitude)
       setCoordinates(decodedCoordinates);
     } catch (error) {
       setError("Error retrieving directions.");
@@ -126,7 +130,15 @@ const DirectionsMap = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <MapView style={{ flex: 1 }} initialRegion={region}>
+    {longtitude ? (<View style={{ flex: 1 }}>
+      <MapView style={{ flex: 1 }} initialRegion={
+        {
+          latitude: latitude,
+          longitude: longtitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }
+      }>
         <Polyline
           coordinates={coordinates}
           strokeColor="red" // fallback for when `strokeColors` is not supported by the map-provider
@@ -136,6 +148,12 @@ const DirectionsMap = () => {
       </MapView>
       {/* {tripInfo ? (<Text>{tripInfo.name}</Text>):(<Text>Loading...</Text>)} */}
       <TripInfo />
+    </View>):(
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    )}
+     
     </View>
   );
 };
