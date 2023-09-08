@@ -146,25 +146,25 @@ export const AuthProvider = ({ children }) => {
   //   }
   // };
 
-  const getLocation = async () => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setError('Permission to access location was denied');
-        return;
-      }
-      // const location = await Location.watchPositionAsync({}, (newLocation) => {
-      //   setLocation(newLocation);
-      //   console.log('New location:', newLocation);
-      // });
-      let locations = await Location.watchPositionAsync({ accuracy: Location.Accuracy.Lowest,  distanceInterval: 2000 }, loc => {
-        setLocation(JSON.parse(JSON.stringify(loc)))
-        console.log(JSON.parse(JSON.stringify(loc)))
-      });
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+  // const getLocation = async () => {
+  //   try {
+  //     const { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       setError('Permission to access location was denied');
+  //       return;
+  //     }
+  //     // const location = await Location.watchPositionAsync({}, (newLocation) => {
+  //     //   setLocation(newLocation);
+  //     //   console.log('New location:', newLocation);
+  //     // });
+  //     let locations = await Location.watchPositionAsync({ accuracy: Location.Accuracy.Lowest,  distanceInterval: 2000 }, loc => {
+  //       setLocation(JSON.parse(JSON.stringify(loc)))
+  //       console.log(JSON.parse(JSON.stringify(loc)))
+  //     });
+  //   } catch (error) {
+  //     setError(error.message);
+  //   }
+  // };
   useEffect(() => {
     isLoggedIn();
     (async () => {
@@ -176,7 +176,7 @@ export const AuthProvider = ({ children }) => {
           {
             accuracy: Location.Accuracy.Highest,
             timeInterval: 1000,
-            distanceInterval: 1,
+            distanceInterval: 2000,
           },
           (location) => {
             setLocation(location);
