@@ -106,18 +106,11 @@ export const AuthProvider = ({ children }) => {
       if (userInfor) {
         setUserInfo(userInfor);
         setProfile(profileuser);
-        socket.on("connect", () => {
-          console.log(socket.id);
-        });
         console.log(` EH ${profileuser.typeVerhicle}`)
         socket.on(`${profileuser.typeVerhicle}`, (msg) => {
           console.log(msg);
           setDataTrip(msg);
           setIsBusy(false);
-        });
-
-        socket.on("disconnect", () => {
-          console.log(socket.id); // undefined
         });
       }
 
