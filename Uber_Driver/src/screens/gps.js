@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
-import * as Location from 'expo-location';
+import { AuthContext } from '../context/AuthContext';
+
 
 const LocationExample = () => {
-  const [location, setLocation] = useState(null);
-  const [error, setError] = useState(null);
+  // const [location, setLocation] = useState(null);
+  // const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const getLocation = async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setError('Permission to access location was denied');
-          return;
-        }
+  // useEffect(() => {
+  //   const getLocation = async () => {
+  //     try {
+  //       const { status } = await Location.requestForegroundPermissionsAsync();
+  //       if (status !== 'granted') {
+  //         setError('Permission to access location was denied');
+  //         return;
+  //       }
 
-        const location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
+  //       const location = await Location.getCurrentPositionAsync({});
+  //       setLocation(location);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     }
+  //   };
 
-    getLocation();
-  }, []);
-
+  //   getLocation();
+  // }, []);
+  const {location,error}= useContext(AuthContext)
   return (
     <View>
       {location ? (

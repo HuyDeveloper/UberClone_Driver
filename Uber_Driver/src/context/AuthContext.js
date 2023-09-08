@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { BASE_URL } from "../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
+import * as Location from 'expo-location';
 const socket = io(BASE_URL);
 export const AuthContext = createContext();
 
@@ -15,7 +16,8 @@ export const AuthProvider = ({ children }) => {
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
   const [tripInfo, setTripInfo] = useState({});
-
+  const [location, setLocation] = useState(null);
+  const [error, setError] = useState(null);
   const setDataTripInfo = (data) => {
     setTripInfo(data);
   };
@@ -123,13 +125,29 @@ export const AuthProvider = ({ children }) => {
 
   const sendInfoDriver = (dataTrip) => {
     profile.cusPhone = dataTrip.phone;
+    profile.location = location
     console.log(profile)
     socket.emit("driverInfo", profile);
   };
 
+  const getLocation = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setError('Permission to access location was denied');
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   useEffect(() => {
     isLoggedIn();
-
+    getLocation();
     //receiveMsg();
   }, []);
 
@@ -154,6 +172,8 @@ export const AuthProvider = ({ children }) => {
         sendInfoDriver,
         setDataTripInfo,
         tripInfo,
+        location,
+        error
       }}
     >
       {children}
