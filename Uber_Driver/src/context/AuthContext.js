@@ -125,9 +125,38 @@ export const AuthProvider = ({ children }) => {
 
   const sendInfoDriver = (dataTrip) => {
     profile.cusPhone = dataTrip.phone;
-    profile.location = location
-    console.log(profile)
-    socket.emit("driverInfo", profile);
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      } else {
+        let locationSubscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.Highest,
+            timeInterval: 1000,
+            distanceInterval: 2000,
+          },
+          (location) => {
+            setLocation(location);
+            console.log(
+              "New location update: " +
+                location.coords.latitude +
+                ", " +
+                location.coords.longitude
+            );
+            if(dataTrip.phone){
+              // let data = { location: location, cusPhone: dataTrip.phone };
+              // console.log(data)
+              // socket.emit("driverGPS", data);
+              profile.location = location;
+              console.log(profile)
+              socket.emit("driverInfo", profile);
+            }
+          }
+        );
+      }
+      return () => locationSubscription.remove();
+    })();
   };
 
   // const getLocation = async () => {
@@ -167,30 +196,7 @@ export const AuthProvider = ({ children }) => {
   // };
   useEffect(() => {
     isLoggedIn();
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-      } else {
-        const locationSubscription = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.Highest,
-            timeInterval: 1000,
-            distanceInterval: 2000,
-          },
-          (location) => {
-            setLocation(location);
-            console.log(
-              "New location update: " +
-                location.coords.latitude +
-                ", " +
-                location.coords.longitude
-            );
-          }
-        );
-      }
-      return () => locationSubscription.remove();
-    })();
+    
   }, []);
 
   // useEffect(() => {

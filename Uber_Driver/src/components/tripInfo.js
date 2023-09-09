@@ -7,7 +7,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 const tripInfo = () => {
-  const { tripInfo, setPedding } = useContext(AuthContext);
+  const { tripInfo, setPedding, setDataTripInfo } = useContext(AuthContext);
   const navigation = useNavigation();
   return (
     <View style={styles.body}>
@@ -35,6 +35,7 @@ const tripInfo = () => {
               style={{ width: 190 }}
               onPressFunction={() => {
                 setPedding();
+                setDataTripInfo({})
                 navigation.navigate("chat");
               }}
             />
